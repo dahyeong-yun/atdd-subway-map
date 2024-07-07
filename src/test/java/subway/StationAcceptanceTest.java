@@ -84,7 +84,7 @@ public class StationAcceptanceTest {
         assertThat(stationNames.size()).isEqualTo(0);
     }
 
-    private ExtractableResponse<Response> createStation(String stationName) {
+    static ExtractableResponse<Response> createStation(String stationName) {
         Map<String, String> params = new HashMap<>();
         params.put("name", stationName);
 

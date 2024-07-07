@@ -1,1 +1,2 @@
-truncate table station;
+delete from station;
+delete from line;
