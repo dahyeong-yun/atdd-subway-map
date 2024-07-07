@@ -35,7 +35,7 @@ public class StationAcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
         // then
-        List<String> stationNames = findAllStations();
+        List<String> stationNames = findAllStationNames();
 
         assertThat(stationNames).containsAnyOf("강남역");
     }
@@ -54,7 +54,7 @@ public class StationAcceptanceTest {
         createStation("을지로4가역");
 
         // when
-        List<String> stationNames = findAllStations();
+        List<String> stationNames = findAllStationNames();
 
         // then
         assertThat(stationNames)
@@ -77,7 +77,7 @@ public class StationAcceptanceTest {
 
         // when
         deleteStation(createdStationId);
-        List<String> stationNames = findAllStations();
+        List<String> stationNames = findAllStationNames();
 
         // then
         assertThat(stationNames).doesNotContain("을지로4가역");
@@ -96,7 +96,7 @@ public class StationAcceptanceTest {
                 .extract();
     }
 
-    private List<String> findAllStations() {
+    private List<String> findAllStationNames() {
         return RestAssured.given().log().all()
                 .when().get("/stations")
                 .then().log().all()
