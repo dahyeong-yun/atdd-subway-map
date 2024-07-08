@@ -5,6 +5,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
 import subway.presentation.LineRequest;
+import subway.presentation.LineResponse;
 
 import java.util.List;
 
@@ -23,5 +24,12 @@ public class TestLine {
                 .when().get("/lines")
                 .then().log().all()
                 .extract().jsonPath().getList("name", String.class);
+    }
+
+    static LineResponse findByLineId(String lineId) {
+        return RestAssured.given().log().all()
+                .when().get("/lines/" + lineId)
+                .then().log().all()
+                .extract().as(LineResponse.class);
     }
 }

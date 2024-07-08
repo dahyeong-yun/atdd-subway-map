@@ -50,4 +50,9 @@ public class LineService {
                 line.getColor(),
                 line.getStations());
     }
+
+    public LineResponse findLineById(Long id) {
+        Line line = lineRepository.findById(id).orElseThrow();
+        return createLineResponse(line);
+    }
 }

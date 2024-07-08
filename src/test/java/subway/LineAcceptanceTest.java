@@ -7,7 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import subway.domain.Line;
 import subway.presentation.LineRequest;
+import subway.presentation.LineResponse;
 
 import java.util.List;
 
@@ -46,19 +48,51 @@ public class LineAcceptanceTest {
      */
     @DisplayName("지하철 노선 목록을 조회한다.")
     void retrieveAllLines() {
+        // given
         TestStation.createStation("강남역");
         TestStation.createStation("을지로4가역");
         TestStation.createStation("또다른역");
+
         LineRequest sinbundangLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
         LineRequest fifthLine = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
 
-
-        // when
         TestLine.createLine(sinbundangLine);
         TestLine.createLine(fifthLine);
 
-        // then
+        // when
         List<String> allLineNames = TestLine.findAllLineNames();
+
+        // then
         Assertions.assertThat(allLineNames).contains("신분당선", "5호선");
+    }
+
+    /**
+     * 지하철 노선 조회
+     * Given: 특정 지하철 노선이 등록되어 있고,
+     * When: 관리자가 해당 노선을 조회하면,
+     * Then: 해당 노선의 정보가 반환된다.
+     */
+    @DisplayName("지하철 노선을 조회한다.")
+    void retrieveLine() {
+        // given
+        TestStation.createStation("강남역");
+        TestStation.createStation("을지로4가역");
+        TestStation.createStation("또다른역");
+
+        LineRequest sinbundangLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+        LineRequest fifthLine = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
+
+        TestLine.createLine(sinbundangLine);
+
+        ExtractableResponse<Response> response = TestLine.createLine(fifthLine);
+        String fifthLineId = response.body().jsonPath().getString("id");
+
+        // when
+        LineResponse findline = TestLine.findByLineId(fifthLineId);
+
+        // then
+        assertThat(findline.getName()).isEqualTo("5호선");
+        assertThat(findline.getColor()).isEqualTo("bg-purple-400");
+        assertThat(findline.getStations().size()).isEqualTo(2);
     }
 }
