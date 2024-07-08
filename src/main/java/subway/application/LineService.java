@@ -1,6 +1,7 @@
 package subway.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import subway.domain.Line;
 import subway.domain.Station;
 import subway.infrastructure.LineRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class LineService {
     private LineRepository lineRepository;
     private StationRepository stationRepository;
@@ -22,6 +24,7 @@ public class LineService {
         this.stationRepository = stationRepository;
     }
 
+    @Transactional
     public LineResponse saveStation(LineRequest lineRequest) {
         Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow();
         Station downStation = stationRepository.findById(lineRequest.getDownStationId()).orElseThrow();
@@ -48,11 +51,17 @@ public class LineService {
         return LineResponse.of(line);
     }
 
+    @Transactional
     public void updateLine(Long id, LineUpdateRequest lineUpdateRequest) {
         Line line = lineRepository.findById(id).orElseThrow();
         line.changeName(lineUpdateRequest.getName());
         line.changeColor(lineUpdateRequest.getColor());
 
         lineRepository.save(line);
+    }
+
+    @Transactional
+    public void deleteLine(Long id) {
+        lineRepository.deleteById(id);
     }
 }

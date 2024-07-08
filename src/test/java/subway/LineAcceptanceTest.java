@@ -125,4 +125,34 @@ public class LineAcceptanceTest {
         assertThat(findline.getColor()).isEqualTo("bg-red-700");
         assertThat(findline.getStations().size()).isEqualTo(2);
     }
+
+
+    /**
+     * 지하철 노선 삭제
+     * Given: 특정 지하철 노선이 등록되어 있고,
+     * When: 관리자가 해당 노선을 삭제하면,
+     * When: 관리자가 해당 노선을 삭제하면,
+     */
+    @Test
+    @DisplayName("지하철 노선을 삭제한다.")
+    void deleteLine() {
+        // given
+        TestStation.createStation("강남역");
+        TestStation.createStation("을지로4가역");
+        LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+
+        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+
+        ExtractableResponse<Response> response = TestLine.createLine(sinbundangLineRequest);
+        String sinbundangLineId = response.body().jsonPath().getString("id");
+
+        // when
+        TestLine.deleteLine(sinbundangLineId);
+        List<String> allLineNames = TestLine.findAllLineNames();
+
+        // then
+        Assertions.assertThat(allLineNames).doesNotContain("신분당선");
+        Assertions.assertThat(allLineNames.size()).isEqualTo(0);
+    }
+
 }

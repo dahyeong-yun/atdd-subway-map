@@ -46,4 +46,10 @@ public class TestLine {
                 .when().put("/lines/" + lineId)
                 .then().log().all();
     }
+
+    static void deleteLine(String lineId) {
+        RestAssured.given().log().all()
+                .when().delete("/lines/" + lineId)
+                .then().log().all();
+    }
 }
