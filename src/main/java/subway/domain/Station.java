@@ -11,8 +11,8 @@ public class Station {
     @Column(length = 20, nullable = false)
     private String name;
 
-//    @ManyToOne
-//    private Line line;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Line line;
 
     public Station() {
     }

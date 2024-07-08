@@ -15,12 +15,11 @@ public class Line {
     @Column(length = 20, nullable = false)
     private String color;
 
-    private Long  upStationId;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Station upStation;
 
-    private Long downStationId;
-
-//    @OneToMany
-//    private List<Station> stations;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Station downStation;
 
     private Integer distance;
 
@@ -28,11 +27,11 @@ public class Line {
 
     }
 
-    public Line(String name, String color, Long upStationId, Long downStationId, Integer distance, List<Station> stations) {
+    public Line(String name, String color, Station upStation, Station downStation, Integer distance) {
         this.name = name;
         this.color = color;
-        this.upStationId = upStationId;
-        this.downStationId = downStationId;
+        this.upStation = upStation;
+        this.downStation = downStation;
         this.distance = distance;
     }
 
@@ -43,15 +42,19 @@ public class Line {
     public Long getId() {
         return id;
     }
+
     public String getColor() {
         return color;
     }
-    public Long getUpStationId() {
-        return upStationId;
+
+    public Station getUpStation() {
+        return upStation;
     }
-    public Long getDownStationId() {
-        return downStationId;
+
+    public Station getDownStation() {
+        return downStation;
     }
+
     public Integer getDistance() {
         return distance;
     }
