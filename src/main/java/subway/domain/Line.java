@@ -8,16 +8,20 @@ public class Line {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(length = 20, nullable = false)
     private String name;
 
     @Column(length = 20, nullable = false)
     private String color;
+
     private Long  upStationId;
+
     private Long downStationId;
 
-    @OneToMany
-    private List<Station> stations;
+//    @OneToMany
+//    private List<Station> stations;
+
     private Integer distance;
 
     public Line() {
@@ -30,7 +34,6 @@ public class Line {
         this.upStationId = upStationId;
         this.downStationId = downStationId;
         this.distance = distance;
-        this.stations = stations;
     }
 
     public String getName() {
@@ -52,7 +55,12 @@ public class Line {
     public Integer getDistance() {
         return distance;
     }
-    public List<Station> getStations() {
-        return stations;
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeColor(String color) {
+        this.color = color;
     }
 }

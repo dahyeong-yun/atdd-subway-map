@@ -7,11 +7,12 @@ public class Station {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(length = 20, nullable = false)
     private String name;
 
-    @ManyToOne
-    private Line line;
+//    @ManyToOne
+//    private Line line;
 
     public Station() {
     }

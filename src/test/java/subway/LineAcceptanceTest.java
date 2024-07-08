@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import subway.domain.Line;
 import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
 
@@ -46,6 +45,7 @@ public class LineAcceptanceTest {
      * When: 관리자가 지하철 노선 목록을 조회하면,
      * Then: 모든 지하철 노선 목록이 반환된다.
      */
+    @Test
     @DisplayName("지하철 노선 목록을 조회한다.")
     void retrieveAllLines() {
         // given
@@ -53,11 +53,11 @@ public class LineAcceptanceTest {
         TestStation.createStation("을지로4가역");
         TestStation.createStation("또다른역");
 
-        LineRequest sinbundangLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
-        LineRequest fifthLine = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
+        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+        LineRequest fifthLineRequest = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
 
-        TestLine.createLine(sinbundangLine);
-        TestLine.createLine(fifthLine);
+        TestLine.createLine(sinbundangLineRequest);
+        TestLine.createLine(fifthLineRequest);
 
         // when
         List<String> allLineNames = TestLine.findAllLineNames();
@@ -72,6 +72,7 @@ public class LineAcceptanceTest {
      * When: 관리자가 해당 노선을 조회하면,
      * Then: 해당 노선의 정보가 반환된다.
      */
+    @Test
     @DisplayName("지하철 노선을 조회한다.")
     void retrieveLine() {
         // given
@@ -79,12 +80,12 @@ public class LineAcceptanceTest {
         TestStation.createStation("을지로4가역");
         TestStation.createStation("또다른역");
 
-        LineRequest sinbundangLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
-        LineRequest fifthLine = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
+        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+        LineRequest fifthLineRequest = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
 
-        TestLine.createLine(sinbundangLine);
+        TestLine.createLine(sinbundangLineRequest);
 
-        ExtractableResponse<Response> response = TestLine.createLine(fifthLine);
+        ExtractableResponse<Response> response = TestLine.createLine(fifthLineRequest);
         String fifthLineId = response.body().jsonPath().getString("id");
 
         // when
@@ -93,6 +94,35 @@ public class LineAcceptanceTest {
         // then
         assertThat(findline.getName()).isEqualTo("5호선");
         assertThat(findline.getColor()).isEqualTo("bg-purple-400");
+        assertThat(findline.getStations().size()).isEqualTo(2);
+    }
+
+    /**
+     * 지하철 노선 수정
+     * Given: 특정 지하철 노선이 등록되어 있고,
+     * When: 관리자가 해당 노선을 수정하면,
+     * Then: 해당 노선의 정보가 수정된다.
+     */
+    @Test
+    @DisplayName("지하철 노선을 수정한다.")
+    void updateLine() {
+        // given
+        TestStation.createStation("강남역");
+        TestStation.createStation("을지로4가역");
+        LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+
+        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+
+        ExtractableResponse<Response> response = TestLine.createLine(sinbundangLineRequest);
+        String sinbundangLineId = response.body().jsonPath().getString("id");
+
+        // when
+        TestLine.updateLine(sinbundangLineId, "신분당선2호선", "bg-red-700");
+        LineResponse findline = TestLine.findByLineId(sinbundangLineId);
+
+        // then
+        assertThat(findline.getName()).isEqualTo("신분당선2호선");
+        assertThat(findline.getColor()).isEqualTo("bg-red-700");
         assertThat(findline.getStations().size()).isEqualTo(2);
     }
 }

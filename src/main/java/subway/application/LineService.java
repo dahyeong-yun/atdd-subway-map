@@ -5,6 +5,7 @@ import subway.domain.Line;
 import subway.domain.Station;
 import subway.infrastructure.LineRepository;
 import subway.infrastructure.StationRepository;
+import subway.presentation.LineUpdateRequest;
 import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
 
@@ -34,7 +35,7 @@ public class LineService {
                 lineRequest.getDistance(),
                 stations)
         );
-        return LineResponse.of(line.getId(), line.getName(), line.getColor(), line.getStations());
+        return LineResponse.of(line.getId(), line.getName(), line.getColor(), stations);
     }
 
     public List<LineResponse> findAllLines() {
@@ -43,16 +44,28 @@ public class LineService {
                 .collect(Collectors.toList());
     }
 
+    public LineResponse findLineById(Long id) {
+        Line line = lineRepository.findById(id).orElseThrow();
+        return createLineResponse(line);
+    }
+
+    public void updateLine(Long id, LineUpdateRequest lineUpdateRequest) {
+        Line line = lineRepository.findById(id).orElseThrow();
+        line.changeName(lineUpdateRequest.getName());
+        line.changeColor(lineUpdateRequest.getColor());
+
+        lineRepository.save(line);
+    }
+
     private LineResponse createLineResponse(Line line) {
         return new LineResponse(
                 line.getId(),
                 line.getName(),
                 line.getColor(),
-                line.getStations());
-    }
-
-    public LineResponse findLineById(Long id) {
-        Line line = lineRepository.findById(id).orElseThrow();
-        return createLineResponse(line);
+                List.of(
+                        stationRepository.findById(line.getUpStationId()).orElseThrow(),
+                        stationRepository.findById(line.getDownStationId()).orElseThrow()
+                )
+        );
     }
 }

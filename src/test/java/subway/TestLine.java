@@ -7,7 +7,9 @@ import org.springframework.http.MediaType;
 import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestLine {
     static ExtractableResponse<Response> createLine(LineRequest lineRequest) {
@@ -31,5 +33,17 @@ public class TestLine {
                 .when().get("/lines/" + lineId)
                 .then().log().all()
                 .extract().as(LineResponse.class);
+    }
+
+    static void updateLine(String lineId, String name, String color) {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", name);
+        params.put("color", color);
+
+        RestAssured.given().log().all()
+                .body(params)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/lines/" + lineId)
+                .then().log().all();
     }
 }
