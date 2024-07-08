@@ -1,7 +1,6 @@
 package subway.domain;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Line {
@@ -15,10 +14,12 @@ public class Line {
     @Column(length = 20, nullable = false)
     private String color;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "up_station_id")
     private Station upStation;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "down_station_id")
     private Station downStation;
 
     private Integer distance;

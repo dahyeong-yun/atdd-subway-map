@@ -1,6 +1,7 @@
 package subway.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Station {
@@ -11,8 +12,11 @@ public class Station {
     @Column(length = 20, nullable = false)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Line line;
+    @OneToMany(mappedBy = "upStation")
+    private List<Line> lineAsUpStation;
+
+    @OneToMany(mappedBy = "downStation")
+    private List<Line> lineAsDownStation;
 
     public Station() {
     }
