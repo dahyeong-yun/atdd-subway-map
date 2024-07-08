@@ -28,5 +28,4 @@ public class LineController {
     public ResponseEntity<List<LineResponse>> retrieveLines() {
         return ResponseEntity.ok().body(lineService.findAllLines());
     }
-
 }

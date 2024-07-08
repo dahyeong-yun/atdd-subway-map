@@ -25,11 +25,15 @@ public class LineResponse {
         return name;
     }
 
+    public String getColor() {
+        return color;
+    }
+
     public List<Station> getStations() {
         return stations;
     }
 
     public static LineResponse of(Long id, String name, String color, List<Station> stations) {
-        return new LineResponse(id, name, color , stations);
+        return new LineResponse(id, name, color, stations);
     }
 }

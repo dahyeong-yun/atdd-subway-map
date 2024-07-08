@@ -45,7 +45,20 @@ public class LineAcceptanceTest {
      * Then: 모든 지하철 노선 목록이 반환된다.
      */
     @DisplayName("지하철 노선 목록을 조회한다.")
-    void retrieveLines() {
+    void retrieveAllLines() {
+        TestStation.createStation("강남역");
+        TestStation.createStation("을지로4가역");
+        TestStation.createStation("또다른역");
+        LineRequest sinbundangLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
+        LineRequest fifthLine = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
 
+
+        // when
+        TestLine.createLine(sinbundangLine);
+        TestLine.createLine(fifthLine);
+
+        // then
+        List<String> allLineNames = TestLine.findAllLineNames();
+        Assertions.assertThat(allLineNames).contains("신분당선", "5호선");
     }
 }
