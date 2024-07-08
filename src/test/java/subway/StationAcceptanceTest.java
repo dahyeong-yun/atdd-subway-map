@@ -1,20 +1,17 @@
 package subway;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static subway.TestStation.findAllStationNames;
 
 @DisplayName("지하철역 관련 기능")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -29,13 +26,13 @@ public class StationAcceptanceTest {
     @Test
     void createStation() {
         // when
-        ExtractableResponse<Response> response = createStation("강남역");
+        ExtractableResponse<Response> response = TestStation.createStation("강남역");
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
         // then
-        List<String> stationNames = findAllStationNames();
+        List<String> stationNames = TestStation.findAllStationNames();
 
         assertThat(stationNames).containsAnyOf("강남역");
     }
@@ -50,8 +47,8 @@ public class StationAcceptanceTest {
     @Test
     void retrieveStation() {
         // given
-        createStation("강남역");
-        createStation("을지로4가역");
+        TestStation.createStation("강남역");
+        TestStation.createStation("을지로4가역");
 
         // when
         List<String> stationNames = findAllStationNames();
@@ -72,40 +69,15 @@ public class StationAcceptanceTest {
     @Test
     void deleteStation() {
         // given
-        ExtractableResponse<Response> response = createStation("을지로4가역");
+        ExtractableResponse<Response> response = TestStation.createStation("을지로4가역");
         String createdStationId = response.body().jsonPath().getString("id");
 
         // when
-        deleteStation(createdStationId);
+        TestStation.deleteStation(createdStationId);
         List<String> stationNames = findAllStationNames();
 
         // then
         assertThat(stationNames).doesNotContain("을지로4가역");
         assertThat(stationNames.size()).isEqualTo(0);
-    }
-
-    static ExtractableResponse<Response> createStation(String stationName) {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", stationName);
-
-        return RestAssured.given().log().all()
-                .body(params)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/stations")
-                .then().log().all()
-                .extract();
-    }
-
-    private List<String> findAllStationNames() {
-        return RestAssured.given().log().all()
-                .when().get("/stations")
-                .then().log().all()
-                .extract().jsonPath().getList("name", String.class);
-    }
-
-    private void deleteStation(String stationId) {
-        RestAssured.given().log().all()
-                .when().delete("/stations/" + stationId)
-                .then().log().all();
     }
 }

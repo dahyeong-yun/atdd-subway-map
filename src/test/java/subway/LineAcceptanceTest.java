@@ -1,20 +1,17 @@
 package subway;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import subway.presentation.LineRequest;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static subway.StationAcceptanceTest.createStation;
 
 @DisplayName("지하철 노선 관련 기능")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -29,32 +26,26 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 생성한다.")
     void createLine() {
         // given
-        createStation("강남역");
-        createStation("을지로4가역");
+        TestStation.createStation("강남역");
+        TestStation.createStation("을지로4가역");
         LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
 
         // when
-        ExtractableResponse<Response> response = createLine(newLine);
+        ExtractableResponse<Response> response = TestLine.createLine(newLine);
 
         // then
-        List<String> allLineNames = findAllLineNames();
+        List<String> allLineNames = TestLine.findAllLineNames();
         Assertions.assertThat(allLineNames).containsAnyOf("신분당선");
         assertThat(response.statusCode()).isEqualTo(201);
     }
 
-    private ExtractableResponse<Response> createLine(LineRequest lineRequest) {
-        return RestAssured.given().log().all()
-                .body(lineRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/lines")
-                .then().log().all()
-                .extract();
-    }
+    /**
+     * Given: 여러 개의 지하철 노선이 등록되어 있고,
+     * When: 관리자가 지하철 노선 목록을 조회하면,
+     * Then: 모든 지하철 노선 목록이 반환된다.
+     */
+    @DisplayName("지하철 노선 목록을 조회한다.")
+    void retrieveLines() {
 
-    private List<String> findAllLineNames() {
-        return RestAssured.given().log().all()
-                .when().get("/lines")
-                .then().log().all()
-                .extract().jsonPath().getList("name", String.class);
     }
 }
