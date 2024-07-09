@@ -27,15 +27,15 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 생성한다.")
     void createLine() {
         // given
-        TestStation.createStation("강남역");
-        TestStation.createStation("을지로4가역");
+        StationSteps.createStation("강남역");
+        StationSteps.createStation("을지로4가역");
         LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
 
         // when
-        ExtractableResponse<Response> response = TestLine.createLine(newLine);
+        ExtractableResponse<Response> response = LineSteps.createLine(newLine);
 
         // then
-        List<String> allLineNames = TestLine.findAllLineNames();
+        List<String> allLineNames = LineSteps.findAllLineNames();
         Assertions.assertThat(allLineNames).containsAnyOf("신분당선");
         assertThat(response.statusCode()).isEqualTo(201);
     }
@@ -49,18 +49,18 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선 목록을 조회한다.")
     void retrieveAllLines() {
         // given
-        TestStation.createStation("강남역");
-        TestStation.createStation("을지로4가역");
-        TestStation.createStation("또다른역");
+        StationSteps.createStation("강남역");
+        StationSteps.createStation("을지로4가역");
+        StationSteps.createStation("또다른역");
 
         LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
         LineRequest fifthLineRequest = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
 
-        TestLine.createLine(sinbundangLineRequest);
-        TestLine.createLine(fifthLineRequest);
+        LineSteps.createLine(sinbundangLineRequest);
+        LineSteps.createLine(fifthLineRequest);
 
         // when
-        List<String> allLineNames = TestLine.findAllLineNames();
+        List<String> allLineNames = LineSteps.findAllLineNames();
 
         // then
         Assertions.assertThat(allLineNames).contains("신분당선", "5호선");
@@ -76,20 +76,20 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 조회한다.")
     void retrieveLine() {
         // given
-        TestStation.createStation("강남역");
-        TestStation.createStation("을지로4가역");
-        TestStation.createStation("또다른역");
+        StationSteps.createStation("강남역");
+        StationSteps.createStation("을지로4가역");
+        StationSteps.createStation("또다른역");
 
         LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
         LineRequest fifthLineRequest = new LineRequest("5호선", "bg-purple-400", 1L, 3L, 10);
 
-        TestLine.createLine(sinbundangLineRequest);
+        LineSteps.createLine(sinbundangLineRequest);
 
-        ExtractableResponse<Response> response = TestLine.createLine(fifthLineRequest);
+        ExtractableResponse<Response> response = LineSteps.createLine(fifthLineRequest);
         String fifthLineId = response.body().jsonPath().getString("id");
 
         // when
-        LineResponse findline = TestLine.findByLineId(fifthLineId);
+        LineResponse findline = LineSteps.findByLineId(fifthLineId);
 
         // then
         assertThat(findline.getName()).isEqualTo("5호선");
@@ -107,18 +107,18 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 수정한다.")
     void updateLine() {
         // given
-        TestStation.createStation("강남역");
-        TestStation.createStation("을지로4가역");
+        StationSteps.createStation("강남역");
+        StationSteps.createStation("을지로4가역");
         LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
 
         LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
 
-        ExtractableResponse<Response> response = TestLine.createLine(sinbundangLineRequest);
+        ExtractableResponse<Response> response = LineSteps.createLine(sinbundangLineRequest);
         String sinbundangLineId = response.body().jsonPath().getString("id");
 
         // when
-        TestLine.updateLine(sinbundangLineId, "신분당선2호선", "bg-red-700");
-        LineResponse findline = TestLine.findByLineId(sinbundangLineId);
+        LineSteps.updateLine(sinbundangLineId, "신분당선2호선", "bg-red-700");
+        LineResponse findline = LineSteps.findByLineId(sinbundangLineId);
 
         // then
         assertThat(findline.getName()).isEqualTo("신분당선2호선");
@@ -137,18 +137,18 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 삭제한다.")
     void deleteLine() {
         // given
-        TestStation.createStation("강남역");
-        TestStation.createStation("을지로4가역");
+        StationSteps.createStation("강남역");
+        StationSteps.createStation("을지로4가역");
         LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
 
         LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
 
-        ExtractableResponse<Response> response = TestLine.createLine(sinbundangLineRequest);
+        ExtractableResponse<Response> response = LineSteps.createLine(sinbundangLineRequest);
         String sinbundangLineId = response.body().jsonPath().getString("id");
 
         // when
-        TestLine.deleteLine(sinbundangLineId);
-        List<String> allLineNames = TestLine.findAllLineNames();
+        LineSteps.deleteLine(sinbundangLineId);
+        List<String> allLineNames = LineSteps.findAllLineNames();
 
         // then
         Assertions.assertThat(allLineNames).doesNotContain("신분당선");

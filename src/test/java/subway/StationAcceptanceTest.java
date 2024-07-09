@@ -11,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static subway.TestStation.findAllStationNames;
+import static subway.StationSteps.findAllStationNames;
 
 @DisplayName("지하철역 관련 기능")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -26,13 +26,13 @@ public class StationAcceptanceTest {
     @Test
     void createStation() {
         // when
-        ExtractableResponse<Response> response = TestStation.createStation("강남역");
+        ExtractableResponse<Response> response = StationSteps.createStation("강남역");
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
         // then
-        List<String> stationNames = TestStation.findAllStationNames();
+        List<String> stationNames = StationSteps.findAllStationNames();
 
         assertThat(stationNames).containsAnyOf("강남역");
     }
@@ -47,8 +47,8 @@ public class StationAcceptanceTest {
     @Test
     void retrieveStation() {
         // given
-        TestStation.createStation("강남역");
-        TestStation.createStation("을지로4가역");
+        StationSteps.createStation("강남역");
+        StationSteps.createStation("을지로4가역");
 
         // when
         List<String> stationNames = findAllStationNames();
@@ -69,11 +69,11 @@ public class StationAcceptanceTest {
     @Test
     void deleteStation() {
         // given
-        ExtractableResponse<Response> response = TestStation.createStation("을지로4가역");
+        ExtractableResponse<Response> response = StationSteps.createStation("을지로4가역");
         String createdStationId = response.body().jsonPath().getString("id");
 
         // when
-        TestStation.deleteStation(createdStationId);
+        StationSteps.deleteStation(createdStationId);
         List<String> stationNames = findAllStationNames();
 
         // then

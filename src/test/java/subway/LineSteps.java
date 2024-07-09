@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestLine {
+public class LineSteps {
     static ExtractableResponse<Response> createLine(LineRequest lineRequest) {
         return RestAssured.given().log().all()
                 .body(lineRequest)
