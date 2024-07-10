@@ -1,4 +1,6 @@
-package subway;
+package subway.presentation;
+
+import subway.domain.Station;
 
 public class StationResponse {
     private Long id;
@@ -15,5 +17,12 @@ public class StationResponse {
 
     public String getName() {
         return name;
+    }
+
+    public static StationResponse of(Station station) {
+        return new StationResponse(
+                station.getId(),
+                station.getName()
+        );
     }
 }
