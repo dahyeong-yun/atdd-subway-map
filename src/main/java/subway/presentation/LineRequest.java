@@ -5,7 +5,7 @@ public class LineRequest {
     private final String color;
     private final Long upStationId;
     private final Long downStationId;
-    private Integer distance;
+    private final Integer distance;
 
     public LineRequest(String name, String color, Long upStationId, Long downStationId, int distance) {
         this.name = name;

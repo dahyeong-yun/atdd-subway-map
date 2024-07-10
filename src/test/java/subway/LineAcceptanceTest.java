@@ -68,7 +68,6 @@ public class LineAcceptanceTest {
     }
 
     /**
-     * 지하철 노선 조회
      * Given: 특정 지하철 노선이 등록되어 있고,
      * When: 관리자가 해당 노선을 조회하면,
      * Then: 해당 노선의 정보가 반환된다.
@@ -99,7 +98,6 @@ public class LineAcceptanceTest {
     }
 
     /**
-     * 지하철 노선 수정
      * Given: 특정 지하철 노선이 등록되어 있고,
      * When: 관리자가 해당 노선을 수정하면,
      * Then: 해당 노선의 정보가 수정된다.
@@ -128,10 +126,9 @@ public class LineAcceptanceTest {
 
 
     /**
-     * 지하철 노선 삭제
      * Given: 특정 지하철 노선이 등록되어 있고,
      * When: 관리자가 해당 노선을 삭제하면,
-     * When: 관리자가 해당 노선을 삭제하면,
+     * Then: 관리자가 해당 노선을 삭제하면,
      */
     @Test
     @DisplayName("지하철 노선을 삭제한다.")
