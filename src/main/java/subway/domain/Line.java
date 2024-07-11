@@ -1,8 +1,6 @@
 package subway.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Line {
@@ -57,6 +55,6 @@ public class Line {
     }
 
     public void addSections(Section section) {
-        this.sections.add(section); // TODO Sections wrapping 에서 검증 추가
+        this.sections.add(section);
     }
 }

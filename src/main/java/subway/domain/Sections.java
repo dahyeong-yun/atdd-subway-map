@@ -25,14 +25,15 @@ public class Sections {
         return sections.get(sections.size() - 1).getDownStation();
     }
 
-    public void add(Section section) {
-        if(sections.isEmpty()) {
-            sections.add(section);
+    public void add(Section newSection) {
+        if (sections.isEmpty()) {
+            sections.add(newSection);
             return;
         }
 
-        if(section.getUpStation() != getDownStation()) {
+        if (newSection.getUpStation() != getDownStation()) {
             throw new RuntimeException("역이 연결되지 않았습니다.");
         }
+        sections.add(newSection);
     }
 }

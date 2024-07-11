@@ -31,7 +31,7 @@ public class LineService {
     }
 
     @Transactional
-    public LineResponse saveStation(LineRequest lineRequest) {
+    public LineResponse saveLine(LineRequest lineRequest) {
         Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow();
         Station downStation = stationRepository.findById(lineRequest.getDownStationId()).orElseThrow();
 
