@@ -16,8 +16,8 @@ public class Line {
     @Column(length = 20, nullable = false)
     private String color;
 
-    @OneToMany(mappedBy = "line", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Section> sections = new ArrayList<>();
+    @Embedded
+    private Sections sections = new Sections();
 
     protected Line() {
 
@@ -49,11 +49,11 @@ public class Line {
     }
 
     public Station getUpStation() {
-        return this.sections.get(0).getUpStation();
+        return sections.getUpStation();
     }
 
     public Station getDownStation() {
-        return this.sections.get(this.sections.size() - 1).getDownStation();
+        return sections.getDownStation();
     }
 
     public void addSections(Section section) {

@@ -12,7 +12,9 @@ import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
 import subway.presentation.LineUpdateRequest;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +40,6 @@ public class LineService {
                 lineRequest.getColor())
         );
 
-        // TODO save
         Section section = new Section(
                 createdline,
                 upStation,
@@ -73,6 +74,11 @@ public class LineService {
 
     @Transactional
     public void deleteLine(Long id) {
-        lineRepository.deleteById(id);
+        Optional<Line> lineOptional = lineRepository.findById(id);
+        if (lineOptional.isPresent()) {
+            lineRepository.delete(lineOptional.get());
+        } else {
+            throw new EntityNotFoundException("Line with id " + id + " not found");
+        }
     }
 }
