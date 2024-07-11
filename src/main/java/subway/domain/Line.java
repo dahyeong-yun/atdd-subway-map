@@ -57,4 +57,8 @@ public class Line {
     public void addSections(Section section) {
         this.sections.add(section);
     }
+
+    public void deleteLastSection() {
+        this.sections.deleteLastSection();
+    }
 }

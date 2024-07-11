@@ -36,4 +36,12 @@ public class Sections {
         }
         sections.add(newSection);
     }
+
+    public void deleteLastSection() {
+        if (sections.size() > 1) {
+            sections.remove(sections.size() - 1);
+        } else {
+            throw new RuntimeException("구간은 최소 1개 이상이어야 합니다.");
+        }
+    }
 }

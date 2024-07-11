@@ -14,7 +14,7 @@ import subway.presentation.SectionResponse;
 import java.util.Objects;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SectionService {
     private LineRepository lineRepository;
     private SectionRepository sectionRepository;
@@ -43,5 +43,12 @@ public class SectionService {
         Section createdSection = sectionRepository.save(requestSection);
 
         return SectionResponse.of(createdSection);
+    }
+
+    public void deleteSection(Long lineId, Long stationId) {
+        Line line = lineRepository.findById(lineId).orElseThrow(); // TODO 존재하지 않는 라인 예외 처리
+
+        line.deleteLastSection();
+        sectionRepository.deleteById(stationId);
     }
 }

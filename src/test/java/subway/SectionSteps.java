@@ -15,4 +15,10 @@ public class SectionSteps {
                 .then().log().all()
                 .extract();
     }
+
+    static void deleteSection(Long lineId, Long stationId) {
+        RestAssured.given().log().all()
+                .when().delete("/lines/" + lineId + "/sections/" + stationId)
+                .then().log().all();
+    }
 }

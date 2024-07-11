@@ -86,7 +86,7 @@ public class LineAcceptanceTest {
         LineSteps.createLine(sinbundangLineRequest);
 
         ExtractableResponse<Response> response = LineSteps.createLine(fifthLineRequest);
-        String fifthLineId = response.body().jsonPath().getString("id");
+        Long fifthLineId = Long.valueOf(response.body().jsonPath().getString("id"));
 
         // when
         LineResponse findline = LineSteps.findByLineId(fifthLineId);
@@ -112,7 +112,7 @@ public class LineAcceptanceTest {
         LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
 
         ExtractableResponse<Response> response = LineSteps.createLine(sinbundangLineRequest);
-        String sinbundangLineId = response.body().jsonPath().getString("id");
+        Long sinbundangLineId = Long.valueOf(response.body().jsonPath().getString("id"));
 
         // when
         LineSteps.updateLine(sinbundangLineId, "신분당선2호선", "bg-red-700");
