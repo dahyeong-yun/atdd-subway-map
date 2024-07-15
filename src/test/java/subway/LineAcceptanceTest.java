@@ -3,6 +3,7 @@ package subway;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Sql(scripts = "classpath:truncate-tables.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class LineAcceptanceTest {
+    private Long 강남역;
+    private Long 을지로4가역;
+    private Long 또다른역;
+    private LineRequest sinbundangLineRequest;
+
+    @BeforeEach
+    void setup() {
+        강남역 = Long.valueOf(StationSteps.createStation("강남역").body().jsonPath().getString("id"));
+        을지로4가역 = Long.valueOf(StationSteps.createStation("을지로4가역").body().jsonPath().getString("id"));
+        또다른역 = Long.valueOf(StationSteps.createStation("또다른역").body().jsonPath().getString("id"));
+        sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
+    }
+
     /**
      * Given: 새로운 지하철 노선 정보를 입력하고,
      * When: 관리자가 노선을 생성하면,
@@ -28,9 +42,6 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 생성한다.")
     void createLine() {
         // given
-        Long 강남역 = Long.valueOf(StationSteps.createStation("강남역").body().jsonPath().getString("id"));
-        Long 을지로4가역 = Long.valueOf(StationSteps.createStation("을지로4가역").body().jsonPath().getString("id"));
-
         LineRequest newLine = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
 
         // when
@@ -51,11 +62,6 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선 목록을 조회한다.")
     void retrieveAllLines() {
         // given
-        Long 강남역 = Long.valueOf(StationSteps.createStation("강남역").body().jsonPath().getString("id"));
-        Long 을지로4가역 = Long.valueOf(StationSteps.createStation("을지로4가역").body().jsonPath().getString("id"));
-        Long 또다른역 = Long.valueOf(StationSteps.createStation("또다른역").body().jsonPath().getString("id"));
-
-        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
         LineRequest fifthLineRequest = new LineRequest("5호선", "bg-purple-400", 강남역, 또다른역, 10);
 
         LineSteps.createLine(sinbundangLineRequest);
@@ -77,11 +83,6 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 조회한다.")
     void retrieveLine() {
         // given
-        Long 강남역 = Long.valueOf(StationSteps.createStation("강남역").body().jsonPath().getString("id"));
-        Long 을지로4가역 = Long.valueOf(StationSteps.createStation("을지로4가역").body().jsonPath().getString("id"));
-        Long 또다른역 = Long.valueOf(StationSteps.createStation("또다른역").body().jsonPath().getString("id"));
-
-        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
         LineRequest fifthLineRequest = new LineRequest("5호선", "bg-purple-400", 강남역, 또다른역, 10);
 
         LineSteps.createLine(sinbundangLineRequest);
@@ -107,11 +108,6 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 수정한다.")
     void updateLine() {
         // given
-        Long 강남역 = Long.valueOf(StationSteps.createStation("강남역").body().jsonPath().getString("id"));
-        Long 을지로4가역 = Long.valueOf(StationSteps.createStation("을지로4가역").body().jsonPath().getString("id"));
-
-        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
-
         ExtractableResponse<Response> response = LineSteps.createLine(sinbundangLineRequest);
         Long sinbundangLineId = Long.valueOf(response.body().jsonPath().getString("id"));
 
@@ -135,11 +131,6 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 삭제한다.")
     void deleteLine() {
         // given
-        Long 강남역 = Long.valueOf(StationSteps.createStation("강남역").body().jsonPath().getString("id"));
-        Long 을지로4가역 = Long.valueOf(StationSteps.createStation("을지로4가역").body().jsonPath().getString("id"));
-
-        LineRequest sinbundangLineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 을지로4가역, 10);
-
         ExtractableResponse<Response> response = LineSteps.createLine(sinbundangLineRequest);
         String sinbundangLineId = response.body().jsonPath().getString("id");
 
