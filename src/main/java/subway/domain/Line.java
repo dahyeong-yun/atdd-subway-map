@@ -29,18 +29,18 @@ public class Line {
     }
 
     public static Line createLine(Station upStation, Station downStation, LineRequest lineRequest) {
-        Line createLine = new Line(lineRequest.getName(), lineRequest.getColor());
+        Line createdLine = new Line(lineRequest.getName(), lineRequest.getColor());
 
-        Section section = new Section(
-                createLine,
+        Sections sections = createdLine.getSections();
+        Section requestSection = Section.createSection(
+                createdLine,
                 upStation,
                 downStation,
                 lineRequest.getDistance()
         );
+        sections.addSections(requestSection);
 
-        Sections sections = createLine.getSections();
-        sections.addSections(section);
-        return createLine;
+        return createdLine;
     }
 
     public String getName() {

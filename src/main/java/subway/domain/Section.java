@@ -24,7 +24,7 @@ public class Section {
 
     private Integer sort;
 
-    public Section(Line line, Station upStation, Station downStation, int distance) {
+    private Section(Line line, Station upStation, Station downStation, int distance) {
         this.line = line;
         this.upStation = upStation;
         this.downStation = downStation;
@@ -33,6 +33,10 @@ public class Section {
 
     protected Section() {
 
+    }
+
+    public static Section createSection(Line line, Station upStation, Station downStation, Integer distance) {
+        return new Section(line, upStation, downStation, distance);
     }
 
     public Long getId() {

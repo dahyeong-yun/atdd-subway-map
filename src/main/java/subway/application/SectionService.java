@@ -12,8 +12,6 @@ import subway.infrastructure.StationRepository;
 import subway.presentation.SectionRequest;
 import subway.presentation.SectionResponse;
 
-import java.util.Objects;
-
 @Service
 @Transactional
 public class SectionService {
@@ -34,14 +32,15 @@ public class SectionService {
         Station upStation = stationRepository.findById(sectionRequest.getUpStationId()).orElseThrow();
         Station downStation = stationRepository.findById(sectionRequest.getDownStationId()).orElseThrow();
 
-        Section requestSection = new Section(
+        Sections sections = line.getSections();
+        Section requestSection = Section.createSection(
                 line,
                 upStation,
                 downStation,
                 sectionRequest.getDistance()
         );
-        Sections sections = line.getSections();
         sections.addSections(requestSection);
+
         Section createdSection = sectionRepository.save(requestSection);
 
         return SectionResponse.of(createdSection);
