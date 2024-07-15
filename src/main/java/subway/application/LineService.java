@@ -3,18 +3,16 @@ package subway.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import subway.domain.Line;
-import subway.domain.Section;
 import subway.domain.Station;
+import subway.exception.LineNotFoundException;
+import subway.exception.StationNotFoundException;
 import subway.infrastructure.LineRepository;
-import subway.infrastructure.SectionRepository;
 import subway.infrastructure.StationRepository;
 import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
 import subway.presentation.LineUpdateRequest;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +28,10 @@ public class LineService {
 
     @Transactional
     public LineResponse saveLine(LineRequest lineRequest) {
-        Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow();
-        Station downStation = stationRepository.findById(lineRequest.getDownStationId()).orElseThrow();
+        Station upStation = stationRepository.findById(lineRequest.getUpStationId())
+                .orElseThrow(() -> new StationNotFoundException(lineRequest.getUpStationId()));
+        Station downStation = stationRepository.findById(lineRequest.getDownStationId())
+                .orElseThrow(() -> new StationNotFoundException(lineRequest.getDownStationId()));
 
         Line createdline = Line.createLine(upStation, downStation, lineRequest);
         lineRepository.save(createdline);
@@ -46,13 +46,15 @@ public class LineService {
     }
 
     public LineResponse findLineById(Long id) {
-        Line line = lineRepository.findById(id).orElseThrow();
+        Line line = lineRepository.findById(id)
+                .orElseThrow(() -> new LineNotFoundException(id));
         return LineResponse.of(line);
     }
 
     @Transactional
     public void updateLine(Long id, LineUpdateRequest lineUpdateRequest) {
-        Line line = lineRepository.findById(id).orElseThrow();
+        Line line = lineRepository.findById(id)
+                .orElseThrow(() -> new LineNotFoundException(id));
         line.changeName(lineUpdateRequest.getName());
         line.changeColor(lineUpdateRequest.getColor());
 
@@ -61,11 +63,8 @@ public class LineService {
 
     @Transactional
     public void deleteLine(Long id) {
-        Optional<Line> lineOptional = lineRepository.findById(id);
-        if (lineOptional.isPresent()) {
-            lineRepository.delete(lineOptional.get());
-        } else {
-            throw new EntityNotFoundException("Line with id " + id + " not found");
-        }
+        Line line = lineRepository.findById(id)
+                .orElseThrow(() -> new LineNotFoundException(id));
+        lineRepository.delete(line);
     }
 }

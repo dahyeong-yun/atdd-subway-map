@@ -1,5 +1,7 @@
 package subway.domain;
 
+import subway.exception.InvalidSectionException;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
@@ -13,14 +15,14 @@ public class Sections {
 
     public Station getUpStation() {
         if (sections.isEmpty()) {
-            throw new IllegalStateException("No sections available");
+            throw new InvalidSectionException("지하철 노선에 구간이 존재하지 않습니다.");
         }
         return sections.get(0).getUpStation();
     }
 
     public Station getDownStation() {
         if (sections.isEmpty()) {
-            throw new IllegalStateException("No sections available");
+            throw new InvalidSectionException("지하철 노선에 구간이 존재하지 않습니다.");
         }
         return sections.get(sections.size() - 1).getDownStation();
     }
@@ -32,7 +34,7 @@ public class Sections {
         }
 
         if (newSection.getUpStation() != getDownStation()) {
-            throw new RuntimeException("역이 연결되지 않았습니다.");
+            throw new InvalidSectionException("지하철 구간 사이 역이 연결되지 않았습니다.");
         }
         sections.add(newSection);
     }
@@ -41,7 +43,7 @@ public class Sections {
         if (sections.size() > 1) {
             sections.remove(sections.size() - 1);
         } else {
-            throw new RuntimeException("구간은 최소 1개 이상이어야 합니다.");
+            throw new InvalidSectionException("지하철 구간은 최소 1개 이상이어야 합니다.");
         }
     }
 }

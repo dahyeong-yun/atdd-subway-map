@@ -6,6 +6,8 @@ import subway.domain.Line;
 import subway.domain.Section;
 import subway.domain.Sections;
 import subway.domain.Station;
+import subway.exception.LineNotFoundException;
+import subway.exception.StationNotFoundException;
 import subway.infrastructure.LineRepository;
 import subway.infrastructure.SectionRepository;
 import subway.infrastructure.StationRepository;
@@ -27,10 +29,13 @@ public class SectionService {
     }
 
     public SectionResponse saveSection(Long lineId, SectionRequest sectionRequest) {
-        Line line = lineRepository.findById(lineId).orElseThrow(); // TODO 존재하지 않는 라인 예외 처리
+        Line line = lineRepository.findById(lineId)
+                .orElseThrow(() -> new LineNotFoundException(lineId)); // TODO 존재하지 않는 라인 예외 처리
 
-        Station upStation = stationRepository.findById(sectionRequest.getUpStationId()).orElseThrow();
-        Station downStation = stationRepository.findById(sectionRequest.getDownStationId()).orElseThrow();
+        Station upStation = stationRepository.findById(sectionRequest.getUpStationId())
+                .orElseThrow(() -> new StationNotFoundException(sectionRequest.getUpStationId()));
+        Station downStation = stationRepository.findById(sectionRequest.getDownStationId())
+                .orElseThrow(() -> new StationNotFoundException(sectionRequest.getDownStationId()));
 
         Sections sections = line.getSections();
         Section requestSection = Section.createSection(
@@ -47,7 +52,8 @@ public class SectionService {
     }
 
     public void deleteSection(Long lineId, Long stationId) {
-        Line line = lineRepository.findById(lineId).orElseThrow(); // TODO 존재하지 않는 라인 예외 처리
+        Line line = lineRepository.findById(lineId)
+                .orElseThrow(() -> new LineNotFoundException(lineId));
         Sections sections = line.getSections();
         sections.deleteLastSection();
         sectionRepository.deleteById(stationId);
