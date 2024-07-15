@@ -22,12 +22,10 @@ import java.util.stream.Collectors;
 public class LineService {
     private LineRepository lineRepository;
     private StationRepository stationRepository;
-    private SectionRepository sectionRepository;
 
-    public LineService(LineRepository lineRepository, StationRepository stationRepository, SectionRepository sectionRepository) {
+    public LineService(LineRepository lineRepository, StationRepository stationRepository) {
         this.lineRepository = lineRepository;
         this.stationRepository = stationRepository;
-        this.sectionRepository = sectionRepository;
     }
 
     @Transactional
@@ -35,19 +33,8 @@ public class LineService {
         Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow();
         Station downStation = stationRepository.findById(lineRequest.getDownStationId()).orElseThrow();
 
-        Line createdline = lineRepository.save(new Line(
-                lineRequest.getName(),
-                lineRequest.getColor())
-        );
-
-        Section section = new Section(
-                createdline,
-                upStation,
-                downStation,
-                lineRequest.getDistance()
-        );
-        sectionRepository.save(section);
-        createdline.addSections(section);
+        Line createdline = Line.createLine(upStation, downStation, lineRequest);
+        lineRepository.save(createdline);
 
         return LineResponse.of(createdline);
     }

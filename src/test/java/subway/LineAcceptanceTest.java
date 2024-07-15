@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
@@ -38,7 +39,7 @@ public class LineAcceptanceTest {
         // then
         List<String> allLineNames = LineSteps.findAllLineNames();
         Assertions.assertThat(allLineNames).containsAnyOf("신분당선");
-        assertThat(response.statusCode()).isEqualTo(201);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     /**

@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import subway.presentation.LineRequest;
 import subway.presentation.LineResponse;
@@ -41,7 +42,7 @@ public class SectionAcceptanceTest {
         ExtractableResponse<Response> response = SectionSteps.createSection(신분당선, new SectionRequest(을지로4가역, 또다른역, 10));
 
         // then
-        assertThat(response.statusCode()).isEqualTo(201);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(Long.valueOf(response.body().jsonPath().getString("lineId"))).isEqualTo(신분당선);
         assertThat(Long.valueOf(response.body().jsonPath().getString("downStationId"))).isEqualTo(또다른역);
     }

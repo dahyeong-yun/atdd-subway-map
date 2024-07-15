@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import subway.domain.Line;
 import subway.domain.Section;
+import subway.domain.Sections;
 import subway.domain.Station;
 import subway.infrastructure.LineRepository;
 import subway.infrastructure.SectionRepository;
@@ -39,7 +40,8 @@ public class SectionService {
                 downStation,
                 sectionRequest.getDistance()
         );
-        line.addSections(requestSection);
+        Sections sections = line.getSections();
+        sections.addSections(requestSection);
         Section createdSection = sectionRepository.save(requestSection);
 
         return SectionResponse.of(createdSection);
@@ -47,8 +49,8 @@ public class SectionService {
 
     public void deleteSection(Long lineId, Long stationId) {
         Line line = lineRepository.findById(lineId).orElseThrow(); // TODO 존재하지 않는 라인 예외 처리
-
-        line.deleteLastSection();
+        Sections sections = line.getSections();
+        sections.deleteLastSection();
         sectionRepository.deleteById(stationId);
     }
 }

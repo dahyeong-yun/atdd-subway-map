@@ -1,5 +1,7 @@
 package subway.domain;
 
+import subway.presentation.LineRequest;
+
 import javax.persistence.*;
 
 @Entity
@@ -26,6 +28,21 @@ public class Line {
         this.color = color;
     }
 
+    public static Line createLine(Station upStation, Station downStation, LineRequest lineRequest) {
+        Line createLine = new Line(lineRequest.getName(), lineRequest.getColor());
+
+        Section section = new Section(
+                createLine,
+                upStation,
+                downStation,
+                lineRequest.getDistance()
+        );
+
+        Sections sections = createLine.getSections();
+        sections.addSections(section);
+        return createLine;
+    }
+
     public String getName() {
         return name;
     }
@@ -38,12 +55,8 @@ public class Line {
         return color;
     }
 
-    public void changeName(String name) {
-        this.name = name;
-    }
-
-    public void changeColor(String color) {
-        this.color = color;
+    public Sections getSections() {
+        return sections;
     }
 
     public Station getUpStation() {
@@ -54,11 +67,11 @@ public class Line {
         return sections.getDownStation();
     }
 
-    public void addSections(Section section) {
-        this.sections.add(section);
+    public void changeName(String name) {
+        this.name = name;
     }
 
-    public void deleteLastSection() {
-        this.sections.deleteLastSection();
+    public void changeColor(String color) {
+        this.color = color;
     }
 }

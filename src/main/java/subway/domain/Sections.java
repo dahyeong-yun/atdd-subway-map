@@ -25,7 +25,7 @@ public class Sections {
         return sections.get(sections.size() - 1).getDownStation();
     }
 
-    public void add(Section newSection) {
+    public void addSections(Section newSection) {
         if (sections.isEmpty()) {
             sections.add(newSection);
             return;
